@@ -26,7 +26,6 @@ public class AdminFilter implements Filter {
             response.sendRedirect(request.getContextPath() + "/403.jsp");
             return;
         }
-
         chain.doFilter(req, res);
     }
 }

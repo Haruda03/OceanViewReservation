@@ -49,12 +49,16 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("fullName", u.getFullName());
             session.setAttribute("role", u.getRole());
 
-            // Role-based redirect
-            if ("STAFF".equals(u.getRole()) || "ADMIN".equals(u.getRole())) {
-                response.sendRedirect(request.getContextPath() + "/staff/dashboard.jsp");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/customer/dashboard.jsp");
-            }
+            // Role-based redirect (ADMIN / STAFF / CUSTOMER)
+String role = u.getRole();
+
+if ("ADMIN".equals(role)) {
+    response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+} else if ("STAFF".equals(role)) {
+    response.sendRedirect(request.getContextPath() + "/staff/dashboard.jsp");
+} else {
+    response.sendRedirect(request.getContextPath() + "/customer/dashboard.jsp");
+}
 
         } catch (Exception e) {
             request.setAttribute("error", "Login failed: " + e.getMessage());

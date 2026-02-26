@@ -3,11 +3,7 @@
     Created on : Feb 25, 2026, 10:10:30 PM
     Author     : Haruda
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
-    String name = (String) session.getAttribute("fullName");
-    String role = (String) session.getAttribute("role");
-%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String fullName = (String) session.getAttribute("fullName");

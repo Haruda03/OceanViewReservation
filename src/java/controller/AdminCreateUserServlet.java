@@ -16,13 +16,14 @@ import java.io.IOException;
 
 @WebServlet("/admin/create-user")
 public class AdminCreateUserServlet extends HttpServlet {
+
     private final UserDAO userDAO = new UserDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Extra server-side safety: confirm ADMIN session
+        // Double-check role server-side (extra security)
         HttpSession session = request.getSession(false);
         String sessionRole = (session == null) ? null : (String) session.getAttribute("role");
         if (!"ADMIN".equals(sessionRole)) {
@@ -37,6 +38,7 @@ public class AdminCreateUserServlet extends HttpServlet {
         String role = request.getParameter("role"); // STAFF or ADMIN
 
         try {
+            // Validation
             if (fullName == null || fullName.trim().length() < 3) {
                 request.setAttribute("error", "Full name must be at least 3 characters.");
                 request.getRequestDispatcher("/admin/createUser.jsp").forward(request, response);
@@ -57,17 +59,28 @@ public class AdminCreateUserServlet extends HttpServlet {
                 request.getRequestDispatcher("/admin/createUser.jsp").forward(request, response);
                 return;
             }
+            String normalizedEmail = email.trim().toLowerCase();
 
-            if (userDAO.emailExists(email.trim().toLowerCase())) {
+            if (phone != null && !phone.trim().isEmpty()) {
+                if (!phone.matches("^[0-9+]{9,15}$")) {
+                    request.setAttribute("error", "Phone number must be 9–15 digits (can include +).");
+                    request.getRequestDispatcher("/admin/createUser.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            // Duplicate email check
+            if (userDAO.emailExists(normalizedEmail)) {
                 request.setAttribute("error", "Email already exists.");
                 request.getRequestDispatcher("/admin/createUser.jsp").forward(request, response);
                 return;
             }
 
+            // Create user
             User u = new User();
             u.setFullName(fullName.trim());
-            u.setEmail(email.trim().toLowerCase());
-            u.setPhone(phone);
+            u.setEmail(normalizedEmail);
+            u.setPhone((phone == null) ? null : phone.trim());
             u.setPasswordHash(PasswordUtil.createStoredPassword(password));
             u.setRole(role);
 
@@ -77,7 +90,8 @@ public class AdminCreateUserServlet extends HttpServlet {
             request.getRequestDispatcher("/admin/createUser.jsp").forward(request, response);
 
         } catch (Exception e) {
-            request.setAttribute("error", "Failed: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("error", "Failed to create user: " + e.getMessage());
             request.getRequestDispatcher("/admin/createUser.jsp").forward(request, response);
         }
     }

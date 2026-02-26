@@ -104,3 +104,21 @@ a.link:hover{text-decoration:underline;}
   color:#666;
   font-size:12px;
 }
+
+.alert{
+  padding:10px 12px;
+  border-radius:12px;
+  margin:12px 0 14px;
+  font-weight:800;
+  font-size:13px;
+}
+.alert.error{
+  background:#ffe5e5;
+  color:#a10000;
+  border:1px solid #ffb3b3;
+}
+.alert.success{
+  background:#e7ffe8;
+  color:#0b6b12;
+  border:1px solid #b9f2be;
+}
