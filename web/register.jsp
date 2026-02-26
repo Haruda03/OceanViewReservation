@@ -8,37 +8,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register</title>
+    <title>Register | Ocean View Resort</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/ocean-auth.css">
 </head>
 <body>
-    <h2>Register</h2>
+<div class="auth-bg">
 
-    <% String err = (String) request.getAttribute("error"); %>
-    <% String msg = (String) request.getAttribute("msg"); %>
-    <% if (err != null) { %>
-        <p style="color:red;"><%= err %></p>
-    <% } %>
-    <% if (msg != null) { %>
-        <p style="color:green;"><%= msg %></p>
-    <% } %>
+    <div class="navbar">
+        <div class="logo">Ocean View Resort</div>
+        <div class="nav-links">
+            <a href="<%=request.getContextPath()%>/index.jsp">Home</a>
+            <a href="<%=request.getContextPath()%>/login.jsp">Login</a>
+        </div>
+    </div>
 
-    <form method="post" action="register">
-        <label>Full Name:</label><br/>
-        <input type="text" name="fullName" required minlength="3"/><br/><br/>
+    <div class="center">
+        <div class="card" style="max-width:620px;">
+            <h2>Create Account</h2>
+            <div class="sub">Register to book rooms and view your reservations.</div>
 
-        <label>Email:</label><br/>
-        <input type="email" name="email" required /><br/><br/>
+            <%
+                String err = (String) request.getAttribute("error");
+                String msg = (String) request.getAttribute("msg");
+                if (err != null) {
+            %>
+                <div class="alert error"><%= err %></div>
+            <% } %>
+            <% if (msg != null) { %>
+                <div class="alert success"><%= msg %></div>
+            <% } %>
 
-        <label>Phone:</label><br/>
-        <input type="text" name="phone" pattern="^[0-9+]{9,15}$"
-               title="Enter 9-15 digits, can include +"/><br/><br/>
+            <form method="post" action="<%=request.getContextPath()%>/register">
+                <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" name="fullName" placeholder="Full name" required minlength="3">
+                </div>
 
-        <label>Password:</label><br/>
-        <input type="password" name="password" required minlength="6"/><br/><br/>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                </div>
 
-        <button type="submit">Create Account</button>
-    </form>
+                <div class="field">
+                    <label>Phone</label>
+                    <input type="text" name="phone" placeholder="+947XXXXXXXX"
+                           pattern="^[0-9+]{9,15}$"
+                           title="Enter 9–15 digits, can include +">
+                </div>
 
-    <p>Already have an account? <a href="login.jsp">Login</a></p>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Minimum 6 characters" required minlength="6">
+                </div>
+
+                <div class="actions">
+                    <button type="submit">Register</button>
+                    <a class="btnlink" href="<%=request.getContextPath()%>/login.jsp">Back to login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">© 2026 Ocean View Resort • Privacy & Security</div>
+</div>
 </body>
 </html>

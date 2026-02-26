@@ -1,0 +1,163 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : Feb 26, 2026, 8:57:15 PM
+    Author     : Haruda
+*/
+
+/* Reset */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+
+/* Background */
+.auth-bg{
+    min-height:100vh;
+    background:
+      linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)),
+      url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e")
+      no-repeat center center/cover;
+    display:flex;
+    flex-direction:column;
+}
+
+/* Navbar */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 38px;
+    color:#fff;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:0.5px;
+}
+
+.nav-links a{
+    color:#fff;
+    text-decoration:none;
+    margin-left:18px;
+    font-weight:700;
+    opacity:0.92;
+    transition:0.25s;
+}
+.nav-links a:hover{ color:#00e0ff; opacity:1; }
+
+/* Center card */
+.center{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+/* Glass card */
+.card{
+    width:100%;
+    max-width:520px;
+    padding:26px 26px 22px;
+    border-radius:16px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.25);
+    box-shadow:0 10px 35px rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color:#fff;
+}
+
+.card h2{
+    font-size:28px;
+    margin-bottom:6px;
+    letter-spacing:0.3px;
+}
+
+.sub{
+    color:rgba(255,255,255,0.86);
+    font-size:14px;
+    margin-bottom:16px;
+}
+
+/* Inputs */
+label{
+    font-weight:700;
+    font-size:13px;
+    color:rgba(255,255,255,0.9);
+}
+
+input{
+    width:100%;
+    margin-top:7px;
+    padding:11px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.25);
+    outline:none;
+    background:rgba(255,255,255,0.14);
+    color:#fff;
+}
+input::placeholder{ color:rgba(255,255,255,0.65); }
+
+.field{ margin-bottom:14px; }
+
+/* Buttons */
+.actions{
+    display:flex;
+    gap:12px;
+    margin-top:8px;
+    align-items:center;
+}
+
+button{
+    border:none;
+    padding:11px 16px;
+    border-radius:999px;
+    font-weight:800;
+    cursor:pointer;
+    background:#00c3ff;
+    color:#fff;
+    transition:0.25s;
+}
+button:hover{ background:#009dcf; }
+
+a.btnlink{
+    display:inline-block;
+    padding:11px 16px;
+    border-radius:999px;
+    border:1.5px solid rgba(255,255,255,0.9);
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    transition:0.25s;
+}
+a.btnlink:hover{
+    background:#fff;
+    color:#001b2d;
+}
+
+/* Alerts */
+.alert{
+    padding:10px 12px;
+    border-radius:12px;
+    margin:12px 0 14px;
+    font-weight:700;
+    font-size:13px;
+}
+.alert.error{
+    background:rgba(255,0,0,0.15);
+    border:1px solid rgba(255,120,120,0.55);
+}
+.alert.success{
+    background:rgba(0,255,120,0.14);
+    border:1px solid rgba(120,255,170,0.55);
+}
+
+/* Footer tiny */
+.footer{
+    text-align:center;
+    padding:14px 10px;
+    color:rgba(255,255,255,0.75);
+    font-size:12px;
+}

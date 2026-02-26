@@ -3,30 +3,62 @@
     Created on : Feb 25, 2026, 9:22:06 PM
     Author     : Haruda
 --%>
+
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Login | Ocean View Resort</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/ocean-auth.css">
 </head>
 <body>
-    <h2>Login</h2>
+<div class="auth-bg">
 
-    <% String err = (String) request.getAttribute("error"); %>
-    <% if (err != null) { %>
-        <p style="color:red;"><%= err %></p>
-    <% } %>
+    <div class="navbar">
+        <div class="logo">Ocean View Resort</div>
+        <div class="nav-links">
+            <a href="<%=request.getContextPath()%>/index.jsp">Home</a>
+            <a href="<%=request.getContextPath()%>/register.jsp">Register</a>
+        </div>
+    </div>
 
-    <form method="post" action="login">
-        <label>Email:</label><br/>
-        <input type="email" name="email" required /><br/><br/>
+    <div class="center">
+        <div class="card">
+            <h2>Login</h2>
+            <div class="sub">Sign in to manage your reservations and billing.</div>
 
-        <label>Password:</label><br/>
-        <input type="password" name="password" required minlength="6"/><br/><br/>
+            <%
+                String err = (String) request.getAttribute("error");
+                String msg = (String) request.getAttribute("msg");
+                if (err != null) {
+            %>
+                <div class="alert error"><%= err %></div>
+            <% } %>
+            <% if (msg != null) { %>
+                <div class="alert success"><%= msg %></div>
+            <% } %>
 
-        <button type="submit">Login</button>
-    </form>
+            <form method="post" action="<%=request.getContextPath()%>/login">
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                </div>
 
-    <p>Don’t have an account? <a href="register.jsp">Register</a></p>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required minlength="6">
+                </div>
+
+                <div class="actions">
+                    <button type="submit">Login</button>
+                    <a class="btnlink" href="<%=request.getContextPath()%>/register.jsp">Create account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">© 2026 Ocean View Resort • Secure Access</div>
+</div>
 </body>
 </html>

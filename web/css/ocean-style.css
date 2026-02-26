@@ -1,0 +1,156 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : Feb 26, 2026, 8:00:13 PM
+    Author     : Haruda
+*/
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* NAVBAR */
+.navbar{
+    position:absolute;
+    top:0;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    padding:20px 40px;
+    z-index:10;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-links a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.nav-links a:hover{
+    color:#00e0ff;
+}
+
+/* HERO SECTION */
+.hero{
+    height:100vh;
+    background: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e") no-repeat center center/cover;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+/* DARK OVERLAY */
+.overlay{
+    background:rgba(0,0,0,0.45);
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero-content{
+    text-align:center;
+    color:white;
+}
+
+.hero-content h1{
+    font-size:60px;
+    margin-bottom:20px;
+    letter-spacing:2px;
+}
+
+.hero-content p{
+    font-size:20px;
+    margin-bottom:30px;
+}
+
+/* BUTTONS */
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+}
+
+.btn{
+    padding:12px 30px;
+    border-radius:30px;
+    text-decoration:none;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.primary{
+    background:#00c3ff;
+    color:white;
+}
+
+.primary:hover{
+    background:#009dcf;
+}
+
+.secondary{
+    border:2px solid white;
+    color:white;
+}
+
+.secondary:hover{
+    background:white;
+    color:#000;
+}
+
+/* ABOUT SECTION */
+.about{
+    padding:60px 40px;
+    text-align:center;
+    background:#f4f9fc;
+}
+
+.about h2{
+    font-size:32px;
+    margin-bottom:40px;
+    color:#003366;
+}
+
+.features{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    flex-wrap:wrap;
+}
+
+.feature{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    width:250px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.feature p{
+    margin-top:10px;
+    font-size:14px;
+    color:#555;
+}
+
+/* FOOTER */
+footer{
+    background:#003366;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
