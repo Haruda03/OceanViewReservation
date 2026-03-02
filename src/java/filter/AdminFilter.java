@@ -22,10 +22,18 @@ public class AdminFilter implements Filter {
         HttpSession session = request.getSession(false);
         String role = (session == null) ? null : (String) session.getAttribute("role");
 
+        // If not logged in, send to login first
+        if (session == null || role == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Logged in but not ADMIN → 403
         if (!"ADMIN".equals(role)) {
             response.sendRedirect(request.getContextPath() + "/403.jsp");
             return;
         }
+
         chain.doFilter(req, res);
     }
 }

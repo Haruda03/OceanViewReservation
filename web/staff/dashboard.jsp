@@ -8,6 +8,22 @@
 <%
     String fullName = (String) session.getAttribute("fullName");
     String role = (String) session.getAttribute("role");
+    if (fullName == null || fullName.trim().isEmpty()) {
+        fullName = "Staff";
+    }
+    if (role == null || role.trim().isEmpty()) {
+        role = "STAFF";
+    }
+
+    Integer pendingRequestsCount = (Integer) request.getAttribute("pendingRequestsCount");
+    Integer openTicketsCount = (Integer) request.getAttribute("openTicketsCount");
+    Integer inProgressTicketsCount = (Integer) request.getAttribute("inProgressTicketsCount");
+
+    if (pendingRequestsCount == null) pendingRequestsCount = 0;
+    if (openTicketsCount == null) openTicketsCount = 0;
+    if (inProgressTicketsCount == null) inProgressTicketsCount = 0;
+
+    String dashErr = (String) request.getAttribute("error");
 %>
 
 <!DOCTYPE html>
@@ -33,10 +49,10 @@
 <div class="hero-inner">
 
     <!-- WELCOME -->
-    <div style="text-align:center; margin-bottom:30px;">
+    <div style="text-align:center; margin-bottom:26px;">
         <h1>Welcome, <%= fullName %> 🌊</h1>
         <p>
-            Manage reservation requests, confirmed bookings, room availability, customer support, and reports for Ocean View Resort.
+            Manage reservation requests, bookings, rooms, support tickets, and analytics for Ocean View Resort.
         </p>
 
         <div style="margin-top:12px;">
@@ -46,12 +62,21 @@
         </div>
     </div>
 
+    <% if (dashErr != null) { %>
+        <div class="alert error" style="max-width:980px; margin: 0 auto 18px;">
+            <%= dashErr %>
+        </div>
+    <% } %>
+
     <!-- FEATURE CARDS -->
     <div class="grid">
 
         <!-- Reservation Requests -->
         <div class="glass-card">
-            <h3>Reservation Requests</h3>
+            <h3>
+                Reservation Requests
+                <span class="badge" style="margin-left:8px;"><%= pendingRequestsCount %> Pending</span>
+            </h3>
             <p>
                 View and process customer reservation requests (PENDING). Approve or reject before expiry.
             </p>
@@ -103,9 +128,13 @@
 
         <!-- Support Tickets -->
         <div class="glass-card">
-            <h3>Support Tickets</h3>
+            <h3>
+                Support Tickets
+                <span class="badge" style="margin-left:8px;"><%= openTicketsCount %> Open</span>
+                <span class="badge" style="margin-left:8px;"><%= inProgressTicketsCount %> In-Progress</span>
+            </h3>
             <p>
-                View customer support tickets with name and email. Update ticket status workflow.
+                View customer tickets with name and email. Update status workflow (OPEN → IN_PROGRESS → CLOSED).
             </p>
             <div class="action">
                 <a class="btn" href="<%=request.getContextPath()%>/staff/support">
@@ -117,12 +146,18 @@
         <!-- Quick Links -->
         <div class="glass-card">
             <h3>Quick Actions</h3>
-            <p style="margin-bottom:10px;">Common staff tasks:</p>
+            <p style="margin-bottom:10px;">
+                Common staff tasks:
+            </p>
             <div class="action" style="display:flex; gap:10px; flex-wrap:wrap;">
                 <a class="btn" href="<%=request.getContextPath()%>/staff/reservations">Pending</a>
                 <a class="btn" href="<%=request.getContextPath()%>/staff/rooms">Rates</a>
                 <a class="btn" href="<%=request.getContextPath()%>/staff/support">Tickets</a>
             </div>
+
+            <p style="margin-top:12px; opacity:0.9;">
+                Tip: Use <b>Reservations Management</b> to filter by status/type and close completed stays.
+            </p>
         </div>
 
     </div>

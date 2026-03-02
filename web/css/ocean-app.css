@@ -159,3 +159,27 @@ a.link:hover{text-decoration:underline;}
 
 .glass-card h3{color:white;}
 .glass-card p{color:rgba(255,255,255,0.9);}
+
+.room-card{
+    background:#ffffff;               /* solid white card */
+    border:1px solid #d0dde9;
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+.room-title{
+    font-size:18px;
+    font-weight:900;
+    color:#003366;                    /* dark blue, visible */
+}
+.room-meta{
+    color:#334455;                    /* dark grey-blue */
+    margin-top:8px;
+    font-size:13px;
+}
+.room-price{
+    font-size:22px;
+    font-weight:900;
+    color:#003366;                    /* dark blue, visible */
+    margin-top:10px;
+}

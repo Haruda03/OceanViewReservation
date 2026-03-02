@@ -7,6 +7,12 @@
 <%
     String fullName = (String) session.getAttribute("fullName");
     String role = (String) session.getAttribute("role");
+    if (fullName == null || fullName.trim().isEmpty()) {
+        fullName = "Guest";
+    }
+    if (role == null || role.trim().isEmpty()) {
+        role = "CUSTOMER";
+    }
 %>
 
 <!DOCTYPE html>

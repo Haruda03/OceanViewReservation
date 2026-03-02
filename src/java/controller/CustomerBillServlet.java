@@ -82,7 +82,25 @@ public class CustomerBillServlet extends HttpServlet {
                 return new WeekendRateStrategy(new BigDecimal("1.20")); // 20% extra on weekend nights
             case "discount":
                 String dp = request.getParameter("discount");
-                BigDecimal percent = new BigDecimal(dp == null ? "10" : dp); // default 10%
+                BigDecimal percent;
+                try {
+                    // default 10% if missing or invalid
+                    if (dp == null || dp.trim().isEmpty()) {
+                        percent = new BigDecimal("10");
+                    } else {
+                        percent = new BigDecimal(dp.trim());
+                    }
+                } catch (NumberFormatException ex) {
+                    percent = new BigDecimal("10");
+                }
+
+                // Clamp to 0–90% for safety
+                if (percent.compareTo(BigDecimal.ZERO) < 0) {
+                    percent = BigDecimal.ZERO;
+                } else if (percent.compareTo(new BigDecimal("90")) > 0) {
+                    percent = new BigDecimal("90");
+                }
+
                 return new DiscountStrategy(percent);
             default:
                 return new NormalRateStrategy();

@@ -99,4 +99,18 @@ public void updateTicketStatus(int ticketId, String status) throws SQLException 
         ps.executeUpdate();
     }
 }
+public int countTicketsByStatus(String status) throws SQLException {
+    String sql = "SELECT COUNT(*) FROM support_tickets WHERE status=?";
+
+    try (Connection c = DBConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+
+        ps.setString(1, status);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
+}
 }

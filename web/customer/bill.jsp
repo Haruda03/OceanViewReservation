@@ -11,6 +11,12 @@
 <%
     String fullName = (String) session.getAttribute("fullName");
     String role = (String) session.getAttribute("role");
+    if (fullName == null || fullName.trim().isEmpty()) {
+        fullName = "Customer";
+    }
+    if (role == null || role.trim().isEmpty()) {
+        role = "CUSTOMER";
+    }
 
     String err = (String) request.getAttribute("error");
     BillData data = (BillData) request.getAttribute("billData");

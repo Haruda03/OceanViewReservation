@@ -374,4 +374,142 @@ public void staffUpdateStatus(String reservationNo, String newStatus, int staffU
         ps.executeUpdate();
     }
 }
+public int countActivePendingReservationRequests() throws SQLException {
+    String sql =
+        "SELECT COUNT(*) " +
+        "FROM reservations " +
+        "WHERE request_type='RESERVATION' AND status='PENDING' " +
+        "AND expires_at IS NOT NULL AND expires_at > NOW()";
+
+    try (Connection c = DBConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        rs.next();
+        return rs.getInt(1);
+    }
+}
+// ========================= REPORTS & ANALYTICS =========================
+
+// Summary counts for all time
+public java.util.Map<String, Integer> reportStatusCounts() throws SQLException {
+    String sql =
+        "SELECT " +
+        "SUM(CASE WHEN status='PENDING' THEN 1 ELSE 0 END) AS pending, " +
+        "SUM(CASE WHEN status='CONFIRMED' THEN 1 ELSE 0 END) AS confirmed, " +
+        "SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END) AS completed, " +
+        "SUM(CASE WHEN status='CANCELLED' THEN 1 ELSE 0 END) AS cancelled, " +
+        "SUM(CASE WHEN status='REJECTED' THEN 1 ELSE 0 END) AS rejected, " +
+        "SUM(CASE WHEN status='EXPIRED' THEN 1 ELSE 0 END) AS expired " +
+        "FROM reservations";
+
+    java.util.Map<String, Integer> m = new java.util.HashMap<>();
+
+    try (Connection c = DBConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        rs.next();
+        m.put("pending", rs.getInt("pending"));
+        m.put("confirmed", rs.getInt("confirmed"));
+        m.put("completed", rs.getInt("completed"));
+        m.put("cancelled", rs.getInt("cancelled"));
+        m.put("rejected", rs.getInt("rejected"));
+        m.put("expired", rs.getInt("expired"));
+    }
+    return m;
+}
+
+// Revenue in date range (by check_in date)
+public java.math.BigDecimal reportRevenue(LocalDate from, LocalDate to) throws SQLException {
+
+    String sql =
+        "SELECT COALESCE(SUM(DATEDIFF(r.check_out, r.check_in) * rm.rate), 0) AS revenue " +
+        "FROM reservations r " +
+        "JOIN rooms rm ON rm.room_id = r.room_id " +
+        "WHERE r.status IN ('CONFIRMED','COMPLETED') " +
+        "AND r.check_in >= ? AND r.check_in < ?";
+
+    try (Connection c = DBConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+
+        ps.setDate(1, java.sql.Date.valueOf(from));
+        ps.setDate(2, java.sql.Date.valueOf(to));
+
+        try (ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getBigDecimal("revenue");
+        }
+    }
+}
+
+// Top room types by revenue (date range)
+public List<java.util.Map<String, Object>> reportTopRoomTypes(LocalDate from, LocalDate to, int limit) throws SQLException {
+
+    String sql =
+        "SELECT rm.room_type, " +
+        "       COUNT(*) AS bookings, " +
+        "       COALESCE(SUM(DATEDIFF(r.check_out, r.check_in) * rm.rate),0) AS revenue " +
+        "FROM reservations r " +
+        "JOIN rooms rm ON rm.room_id = r.room_id " +
+        "WHERE r.status IN ('CONFIRMED','COMPLETED') " +
+        "AND r.check_in >= ? AND r.check_in < ? " +
+        "GROUP BY rm.room_type " +
+        "ORDER BY revenue DESC " +
+        "LIMIT ?";
+
+    List<java.util.Map<String, Object>> list = new java.util.ArrayList<>();
+
+    try (Connection c = DBConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+
+        ps.setDate(1, java.sql.Date.valueOf(from));
+        ps.setDate(2, java.sql.Date.valueOf(to));
+        ps.setInt(3, limit);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                java.util.Map<String, Object> row = new java.util.HashMap<>();
+                row.put("roomType", rs.getString("room_type"));
+                row.put("bookings", rs.getInt("bookings"));
+                row.put("revenue", rs.getBigDecimal("revenue"));
+                list.add(row);
+            }
+        }
+    }
+    return list;
+}
+
+// Daily revenue (date range) - use for charts later
+public List<java.util.Map<String, Object>> reportDailyRevenue(LocalDate from, LocalDate to) throws SQLException {
+
+    String sql =
+        "SELECT r.check_in AS day, " +
+        "       COALESCE(SUM(DATEDIFF(r.check_out, r.check_in) * rm.rate),0) AS revenue " +
+        "FROM reservations r " +
+        "JOIN rooms rm ON rm.room_id = r.room_id " +
+        "WHERE r.status IN ('CONFIRMED','COMPLETED') " +
+        "AND r.check_in >= ? AND r.check_in < ? " +
+        "GROUP BY r.check_in " +
+        "ORDER BY r.check_in ASC";
+
+    List<java.util.Map<String, Object>> list = new java.util.ArrayList<>();
+
+    try (Connection c = DBConnectionManager.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+
+        ps.setDate(1, java.sql.Date.valueOf(from));
+        ps.setDate(2, java.sql.Date.valueOf(to));
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                java.util.Map<String, Object> row = new java.util.HashMap<>();
+                row.put("day", rs.getDate("day").toLocalDate());
+                row.put("revenue", rs.getBigDecimal("revenue"));
+                list.add(row);
+            }
+        }
+    }
+    return list;
+}
 }

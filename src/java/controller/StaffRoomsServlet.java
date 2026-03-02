@@ -5,18 +5,13 @@
 package controller;
 
 import dao.RoomDAO;
-import model.Room;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.List;
 
 @WebServlet("/staff/rooms")
 public class StaffRoomsServlet extends HttpServlet {
@@ -40,10 +35,8 @@ public class StaffRoomsServlet extends HttpServlet {
         }
 
         try {
-            List<Room> rooms = roomDAO.findAllRooms();
-            request.setAttribute("rooms", rooms);
+            request.setAttribute("rooms", roomDAO.findAllRooms());
 
-            // show messages from redirect
             String msg = request.getParameter("msg");
             String err = request.getParameter("err");
             if (msg != null) request.setAttribute("msg", msg);
@@ -68,43 +61,72 @@ public class StaffRoomsServlet extends HttpServlet {
             return;
         }
 
-        String roomIdStr = request.getParameter("roomId");
-        String rateStr = request.getParameter("rate");
-        String status = request.getParameter("status"); // ACTIVE / INACTIVE
+        String action = request.getParameter("action");
+        if (action == null) action = "update";
 
         try {
-            if (roomIdStr == null || rateStr == null || status == null) {
-                response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Missing+fields");
+            if ("update".equals(action)) {
+
+                int roomId = Integer.parseInt(request.getParameter("roomId"));
+                BigDecimal rate = new BigDecimal(request.getParameter("rate"));
+                String status = request.getParameter("status");
+
+                if (rate.compareTo(BigDecimal.ZERO) <= 0)
+                    throw new IllegalArgumentException("Rate must be > 0");
+
+                if (!("ACTIVE".equals(status) || "INACTIVE".equals(status)))
+                    throw new IllegalArgumentException("Invalid status");
+
+                roomDAO.updateRoom(roomId, rate, status);
+                response.sendRedirect(request.getContextPath() + "/staff/rooms?msg=Room+updated+successfully");
                 return;
             }
 
-            int roomId = Integer.parseInt(roomIdStr.trim());
+            if ("add".equals(action)) {
 
-            BigDecimal rate;
-            try {
-                rate = new BigDecimal(rateStr.trim());
-            } catch (NumberFormatException ex) {
-                response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Invalid+rate+value");
+                String roomType = request.getParameter("roomType");
+                BigDecimal rate = new BigDecimal(request.getParameter("rate"));
+                int maxGuests = Integer.parseInt(request.getParameter("maxGuests"));
+                String status = request.getParameter("status");
+
+                if (roomType == null || roomType.trim().isEmpty())
+                    throw new IllegalArgumentException("Room type required");
+                if (rate.compareTo(BigDecimal.ZERO) <= 0)
+                    throw new IllegalArgumentException("Rate must be > 0");
+                if (maxGuests < 1 || maxGuests > 20)
+                    throw new IllegalArgumentException("Max guests must be between 1 and 20");
+                if (!("ACTIVE".equals(status) || "INACTIVE".equals(status)))
+                    throw new IllegalArgumentException("Invalid status");
+
+                roomDAO.addRoom(roomType.trim(), rate, maxGuests, status);
+                response.sendRedirect(request.getContextPath() + "/staff/rooms?msg=New+room+added");
                 return;
             }
 
-            if (rate.compareTo(BigDecimal.ZERO) <= 0) {
-                response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Rate+must+be+greater+than+0");
+            if ("delete".equals(action)) {
+
+                int roomId = Integer.parseInt(request.getParameter("roomId"));
+
+                if (roomDAO.hasActiveBooking(roomId)) {
+                    response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Cannot+delete:+Room+has+CONFIRMED+booking");
+                    return;
+                }
+
+                roomDAO.deleteRoom(roomId);
+                response.sendRedirect(request.getContextPath() + "/staff/rooms?msg=Room+deleted");
                 return;
             }
 
-            if (!("ACTIVE".equals(status) || "INACTIVE".equals(status))) {
-                response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Invalid+status");
-                return;
-            }
-
-            roomDAO.updateRoom(roomId, rate, status);
-
-            response.sendRedirect(request.getContextPath() + "/staff/rooms?msg=Room+updated+successfully");
+            response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Invalid+action");
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/staff/rooms?err=Update+failed");
+            response.sendRedirect(request.getContextPath() + "/staff/rooms?err=" + encode(e.getMessage()));
         }
+    }
+
+    private String encode(String s) {
+        if (s == null) return "Error";
+        return s.replace(" ", "+");
     }
 }
