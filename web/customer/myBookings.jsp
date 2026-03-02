@@ -1,0 +1,133 @@
+<%-- 
+    Document   : myBookings
+    Created on : Mar 2, 2026, 9:13:49 AM
+    Author     : Haruda
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="model.ReservationView"%>
+<%@page import="java.time.temporal.ChronoUnit"%>
+
+<%
+    String fullName = (String) session.getAttribute("fullName");
+    String role = (String) session.getAttribute("role");
+
+    String err = (String) request.getAttribute("error");
+    List<ReservationView> bookings = (List<ReservationView>) request.getAttribute("bookings");
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Bookings | Ocean View Resort</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/ocean-app.css">
+    <style>
+        table{ width:100%; border-collapse:collapse; margin-top:10px; }
+        th, td{ padding:10px; border-bottom:1px solid #e7eef6; text-align:left; vertical-align:top; }
+        th{ color:#003366; background:#f2f8ff; }
+        .status{ padding:6px 10px; border-radius:999px; font-weight:800; font-size:12px; display:inline-block; }
+        .CONFIRMED{ background:#e7ffe8; color:#0b6b12; }
+        .CANCELLED{ background:#ffe5e5; color:#a10000; }
+        .COMPLETED{ background:#e9f7ff; color:#006a8e; }
+        .muted{ color:#666; font-size:12px; }
+        .smallbtn{
+            padding:8px 10px; border-radius:10px; background:#00c3ff;
+            color:#fff; text-decoration:none; font-weight:900; display:inline-block;
+        }
+        .smallbtn:hover{ background:#009dcf; }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">Ocean View Resort • Customer Portal</div>
+    <div class="userchip">
+        <%= fullName %> • <%= role %> •
+        <a class="link" style="color:white;" href="<%=request.getContextPath()%>/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="hero">
+        <h1>My Bookings</h1>
+        <p>These bookings were confirmed instantly when you selected <b>Book Now</b>.</p>
+        <div style="margin-top:12px;">
+            <span class="badge">Instant Confirm</span>
+            <span class="badge">Billing Available</span>
+            <span class="badge">Stay Details</span>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+        <h3>Booking List</h3>
+
+        <% if (err != null) { %>
+            <div class="alert error"><%= err %></div>
+        <% } %>
+
+        <div class="actions" style="margin-top:10px;">
+            <a class="btn" href="<%=request.getContextPath()%>/customer/book">New Booking</a>
+            <a class="btnlink" href="<%=request.getContextPath()%>/customer/dashboard.jsp">Back</a>
+        </div>
+
+        <% if (bookings == null || bookings.isEmpty()) { %>
+            <p style="margin-top:14px;color:#555;">No direct bookings found yet.</p>
+        <% } else { %>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Booking No</th>
+                <th>Room</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Nights</th>
+                <th>Guests</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for (ReservationView r : bookings) {
+                long nights = ChronoUnit.DAYS.between(r.getCheckIn(), r.getCheckOut());
+            %>
+            <tr>
+                <td><b><%= r.getReservationNo() %></b></td>
+                <td>
+                    <%= r.getRoomType() %>
+                    <div class="muted">LKR <%= r.getRate() %> / night</div>
+                </td>
+                <td><%= r.getCheckIn() %></td>
+                <td><%= r.getCheckOut() %></td>
+                <td><%= nights %></td>
+                <td><%= r.getGuests() %></td>
+                <td><span class="status <%= r.getStatus() %>"><%= r.getStatus() %></span></td>
+                <td style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <a class="smallbtn"
+                       href="<%=request.getContextPath()%>/customer/reservation-details?no=<%= r.getReservationNo() %>">
+                        View
+                    </a>
+
+                    <%-- Bill allowed only for CONFIRMED --%>
+                    <% if ("CONFIRMED".equals(r.getStatus())) { %>
+                        <a class="smallbtn"
+                           href="<%=request.getContextPath()%>/customer/bill?no=<%= r.getReservationNo() %>">
+                            Bill
+                        </a>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+        <% } %>
+    </div>
+
+    <div class="footer">© 2026 Ocean View Resort • My Bookings</div>
+</div>
+
+</body>
+</html>

@@ -9,83 +9,131 @@
     String fullName = (String) session.getAttribute("fullName");
     String role = (String) session.getAttribute("role");
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Staff Dashboard | Ocean View Resort</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/ocean-app.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/dashboard.css">
 </head>
+
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
     <div class="brand">Ocean View Resort • Staff Console</div>
-    <div class="userchip"><%= fullName %> • <%= role %> •
+    <div class="userchip">
+        <%= fullName %> • <%= role %> •
         <a class="link" style="color:white;" href="<%=request.getContextPath()%>/logout">Logout</a>
     </div>
 </div>
 
-<div class="container">
+<!-- FULL OCEAN BACKGROUND -->
+<div class="full-hero">
+<div class="hero-inner">
 
-    <div class="hero">
-        <h1>Staff Operations Dashboard 🧾</h1>
-        <p>Search and verify reservations, manage booking status, generate reports, and support guests during check-in/check-out. Access is role-restricted for security.</p>
+    <!-- WELCOME -->
+    <div style="text-align:center; margin-bottom:30px;">
+        <h1>Welcome, <%= fullName %> 🌊</h1>
+        <p>
+            Manage reservation requests, confirmed bookings, room availability, customer support, and reports for Ocean View Resort.
+        </p>
+
         <div style="margin-top:12px;">
-            <span class="badge">Role-Based Access</span>
-            <span class="badge">Reservation Search</span>
-            <span class="badge">Reports</span>
+            <span class="badge">Operations</span>
+            <span class="badge">Approvals</span>
+            <span class="badge">Service Management</span>
         </div>
     </div>
 
+    <!-- FEATURE CARDS -->
     <div class="grid">
-        <div class="card">
-            <h3>Search Reservation</h3>
-            <p>Retrieve complete booking information using reservation number. This supports quick verification at reception.</p>
+
+        <!-- Reservation Requests -->
+        <div class="glass-card">
+            <h3>Reservation Requests</h3>
+            <p>
+                View and process customer reservation requests (PENDING). Approve or reject before expiry.
+            </p>
             <div class="action">
-                <a class="btn" href="<%=request.getContextPath()%>/staff/searchReservation.jsp">Search</a>
-                <a class="link" href="<%=request.getContextPath()%>/staff/help.jsp">Help</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/reservations">
+                    View Requests
+                </a>
             </div>
         </div>
 
-        <div class="card">
-            <h3>Manage Reservations</h3>
-            <p>Confirm, cancel, or mark reservations as completed. Staff actions update database records and status logs.</p>
+        <!-- Reservations Management -->
+        <div class="glass-card">
+            <h3>Reservations Management</h3>
+            <p>
+                View all bookings/reservations with filters. Cancel confirmed stays or mark them as completed.
+            </p>
             <div class="action">
-                <a class="btn" href="<%=request.getContextPath()%>/staff/manageReservations.jsp">Manage</a>
-                <a class="link" href="<%=request.getContextPath()%>/staff/reservationDetails.jsp">Details</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/reservations-manage">
+                    Manage
+                </a>
             </div>
         </div>
 
-        <div class="card">
-            <h3>Billing Support</h3>
-            <p>Assist guests by calculating bills based on nights × rate, including discounts/seasonal rules if applicable.</p>
+        <!-- Room Management -->
+        <div class="glass-card">
+            <h3>Room Management</h3>
+            <p>
+                Update room rates and toggle availability (ACTIVE / INACTIVE) to control inventory.
+            </p>
             <div class="action">
-                <a class="btn" href="<%=request.getContextPath()%>/staff/billSupport.jsp">Generate Bill</a>
-                <a class="link" href="<%=request.getContextPath()%>/staff/help.jsp">Billing guide</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/rooms">
+                    Rooms
+                </a>
             </div>
         </div>
 
-        <div class="card">
-            <h3>Reports (Value Added)</h3>
-            <p>Daily check-ins/check-outs, occupancy summary, and revenue estimates for management decision-making.</p>
+        <!-- Reports -->
+        <div class="glass-card">
+            <h3>Reports & Analytics</h3>
+            <p>
+                View operational summary: pending, confirmed, completed, cancelled, and estimated revenue.
+            </p>
             <div class="action">
-                <a class="btn" href="<%=request.getContextPath()%>/staff/reports.jsp">Open Reports</a>
-                <a class="link" href="<%=request.getContextPath()%>/staff/help.jsp">How to use</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/reports">
+                    Reports
+                </a>
             </div>
         </div>
 
-        <% if ("ADMIN".equals(role)) { %>
-        <div class="card">
-            <h3>Admin: Create Staff/Admin</h3>
-            <p>Create user accounts with controlled permissions. Prevents privilege escalation through public registration.</p>
+        <!-- Support Tickets -->
+        <div class="glass-card">
+            <h3>Support Tickets</h3>
+            <p>
+                View customer support tickets with name and email. Update ticket status workflow.
+            </p>
             <div class="action">
-                <a class="btn" href="<%=request.getContextPath()%>/admin/createUser.jsp">Create User</a>
-                <a class="link" href="<%=request.getContextPath()%>/admin/manageUsers.jsp">Manage Users</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/support">
+                    Support
+                </a>
             </div>
         </div>
-        <% } %>
+
+        <!-- Quick Links -->
+        <div class="glass-card">
+            <h3>Quick Actions</h3>
+            <p style="margin-bottom:10px;">Common staff tasks:</p>
+            <div class="action" style="display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn" href="<%=request.getContextPath()%>/staff/reservations">Pending</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/rooms">Rates</a>
+                <a class="btn" href="<%=request.getContextPath()%>/staff/support">Tickets</a>
+            </div>
+        </div>
+
     </div>
 
-    <div class="footer">© 2026 Ocean View Resort • Staff Console</div>
 </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 Ocean View Resort • Staff Operations Portal
+</div>
+
 </body>
 </html>
