@@ -14,7 +14,10 @@ public class BillData {
     private BigDecimal rate;
     private LocalDate checkIn;
     private LocalDate checkOut; // exclusive
-
+    private int userId;
+public int getUserId(){return userId;}
+public void setUserId(int userId){this.userId=userId;}
+    
     public String getReservationNo() { return reservationNo; }
     public void setReservationNo(String reservationNo) { this.reservationNo = reservationNo; }
 

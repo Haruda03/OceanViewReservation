@@ -6,6 +6,7 @@ package controller;
 
 import dao.ReservationDAO;
 import dao.RoomDAO;
+import dao.NotificationDAO;
 import model.Room;
 
 import jakarta.servlet.ServletException;
@@ -21,9 +22,11 @@ public class CustomerBookingActionServlet extends HttpServlet {
 
     private final ReservationDAO reservationDAO = new ReservationDAO();
     private final RoomDAO roomDAO = new RoomDAO();
+    private final NotificationDAO notificationDAO = new NotificationDAO();
 
     private boolean isCustomer(HttpSession session) {
-        if (session == null) return false;
+        if (session == null)
+            return false;
         String role = (String) session.getAttribute("role");
         return "CUSTOMER".equals(role);
     }
@@ -56,7 +59,8 @@ public class CustomerBookingActionServlet extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "book";
+        if (action == null)
+            action = "book";
 
         String roomIdStr = request.getParameter("roomId");
         String checkInStr = request.getParameter("checkIn");
@@ -132,11 +136,19 @@ public class CustomerBookingActionServlet extends HttpServlet {
                 // Reservation request with expiry, e.g. 60 minutes
                 reservationDAO.createReservationRequest(
                         reservationNo, userId, roomId, checkIn, checkOut, guests, 60);
+
+                String fullName = (String) session.getAttribute("fullName");
+                notificationDAO.notifyStaff("New reservation request " + reservationNo + " from " + fullName);
+
                 response.sendRedirect(request.getContextPath() + "/customer/my-reservations");
             } else {
                 // Direct booking (CONFIRMED)
                 reservationDAO.createDirectBooking(
                         reservationNo, userId, roomId, checkIn, checkOut, guests);
+
+                String fullName = (String) session.getAttribute("fullName");
+                notificationDAO.notifyStaff("New instant booking " + reservationNo + " created by " + fullName);
+
                 response.sendRedirect(request.getContextPath() + "/customer/my-bookings");
             }
 

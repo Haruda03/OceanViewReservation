@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.ReservationDetails"%>
+<%@page import="model.ReservationDetail"%>
 <%@page import="java.time.temporal.ChronoUnit"%>
 
 <%
@@ -13,7 +13,7 @@
     String role = (String) session.getAttribute("role");
 
     String err = (String) request.getAttribute("error");
-    ReservationDetails d = (ReservationDetails) request.getAttribute("detail");
+    ReservationDetail d = (ReservationDetail) request.getAttribute("detail");
 
     long nights = 0;
     if (d != null) nights = ChronoUnit.DAYS.between(d.getCheckIn(), d.getCheckOut());

@@ -5,6 +5,7 @@
 package controller;
 
 import dao.ReservationDAO;
+import dao.NotificationDAO;
 import model.ReservationView;
 
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.util.List;
 public class StaffReservationServlet extends HttpServlet {
 
     private final ReservationDAO reservationDAO = new ReservationDAO();
+    private final NotificationDAO notificationDAO = new NotificationDAO();
 
     /* ---------------- GET (LOAD PAGE) ---------------- */
     @Override
@@ -70,13 +72,13 @@ public class StaffReservationServlet extends HttpServlet {
             request.setAttribute("requests", list);
 
             request.getRequestDispatcher("/staff/pendingRequests.jsp")
-                   .forward(request, response);
+                    .forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/staff/pendingRequests.jsp")
-                   .forward(request, response);
+                    .forward(request, response);
         }
     }
 
@@ -85,6 +87,11 @@ public class StaffReservationServlet extends HttpServlet {
 
         String no = request.getParameter("no");
         reservationDAO.approveReservation(no, staffId);
+
+        Integer customerId = reservationDAO.getUserIdByReservationNo(no);
+        if (customerId != null) {
+            notificationDAO.notifyUser(customerId, "Your reservation request " + no + " has been APPROVED.");
+        }
     }
 
     /* ---------------- REJECT ---------------- */
@@ -94,5 +101,11 @@ public class StaffReservationServlet extends HttpServlet {
         String note = request.getParameter("note");
 
         reservationDAO.rejectReservation(no, staffId, note);
+
+        Integer customerId = reservationDAO.getUserIdByReservationNo(no);
+        if (customerId != null) {
+            notificationDAO.notifyUser(customerId, "Your reservation request " + no + " has been REJECTED. "
+                    + (note != null && !note.trim().isEmpty() ? "Note: " + note : ""));
+        }
     }
 }
