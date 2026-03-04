@@ -36,14 +36,18 @@ public class CustomerBillServlet extends HttpServlet {
         }
 
         String no = request.getParameter("no");
-        if (no == null || no.trim().isEmpty()) {
-            request.setAttribute("error", "Booking number is required.");
-            request.getRequestDispatcher("/customer/bill.jsp").forward(request, response);
-            return;
-        }
 
         try {
             reservationDAO.expireOldPending();
+
+            if (no == null || no.trim().isEmpty()) {
+                // Fetch list of all bills for that user, displaying their check-in/out dates
+                java.util.List<model.ReservationView> eligibleList = reservationDAO
+                        .findEligibleForBillingByUser(userId);
+                request.setAttribute("eligibleList", eligibleList);
+                request.getRequestDispatcher("/customer/bill.jsp").forward(request, response);
+                return;
+            }
 
             BillData data = reservationDAO.findConfirmedBillDataForCustomer(no.trim(), userId);
             if (data == null) {
@@ -75,7 +79,8 @@ public class CustomerBillServlet extends HttpServlet {
         // /customer/bill?no=OVR-...&pricing=discount&discount=10
 
         String pricing = request.getParameter("pricing");
-        if (pricing == null) pricing = "normal";
+        if (pricing == null)
+            pricing = "normal";
 
         switch (pricing.toLowerCase()) {
             case "weekend":

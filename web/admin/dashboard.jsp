@@ -56,11 +56,11 @@
                         </div>
 
                         <div class="card">
-                            <h3>System Help</h3>
-                            <p>View help guidelines for staff onboarding, operational procedures, and secure usage of
-                                the system.</p>
+                            <h3>System User Guide</h3>
+                            <p>View comprehensive guidelines for staff onboarding, operational procedures, and secure
+                                usage of the system.</p>
                             <div class="action">
-                                <a class="btn" href="<%=request.getContextPath()%>/staff/help.jsp">Help</a>
+                                <a class="btn" href="<%=request.getContextPath()%>/staff/help.jsp">User Guide</a>
                                 <a class="link" href="<%=request.getContextPath()%>/index.jsp">Resort Home</a>
                             </div>
                         </div>

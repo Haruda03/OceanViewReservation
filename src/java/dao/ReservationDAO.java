@@ -201,6 +201,27 @@ public class ReservationDAO {
         return v;
     }
 
+    public List<ReservationView> findEligibleForBillingByUser(int userId) throws SQLException {
+        String sql = "SELECT r.reservation_no, r.check_in, r.check_out, r.guests, r.status, r.request_type, r.expires_at, "
+                + "       rm.room_type, rm.rate " +
+                "FROM reservations r " +
+                "JOIN rooms rm ON rm.room_id = r.room_id " +
+                "WHERE r.user_id=? AND r.status IN ('CONFIRMED', 'COMPLETED') " +
+                "ORDER BY r.check_in DESC";
+
+        List<ReservationView> list = new ArrayList<>();
+        try (Connection c = DBConnectionManager.getInstance().getConnection();
+                PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapReservationView(rs));
+                }
+            }
+        }
+        return list;
+    }
+
     /*
      * ---------------------- STAFF: ACTIVE PENDING REQUESTS (RESERVATION only)
      * ----------------------

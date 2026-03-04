@@ -93,8 +93,11 @@
                             <div class="topbar">
                                 <div class="brand">Notifications Portal</div>
                                 <div class="userchip">
-                                    <a class="link" style="color:white; margin-right:15px;"
-                                        href="<%=request.getContextPath()%>/<%=roleUrl%>">Back to Dashboard</a>
+                                    <a class="btn-back" href="<%=request.getContextPath()%>/<%=roleUrl%>">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                                        </svg> Back to Dashboard
+                                    </a>
                                     <a class="link" style="color:white;"
                                         href="<%=request.getContextPath()%>/logout">Logout</a>
                                 </div>

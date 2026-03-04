@@ -88,6 +88,33 @@ a.link{
 }
 a.link:hover{text-decoration:underline;}
 
+a.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  background: white;
+  color: #003366;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 14px;
+  border: 1px solid #cfd9e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+a.btn-back:hover {
+  background: #f2f8ff;
+  border-color: #006a8e;
+  color: #006a8e;
+  transform: translateY(-1px);
+}
+a.btn-back svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
 .badge{
   display:inline-block;
   padding:6px 10px;

@@ -25,10 +25,14 @@
                     <div class="brand">Ocean View Resort • Staff Console</div>
                     <div class="userchip">
                         <%= fullName %> • <%= role %> •
-                                <a class="link" style="color:#ffeb3b; font-weight:bold;"
-                                    href="<%=request.getContextPath()%>/notifications">🔔 Notifications</a> •
-                                <a class="link" style="color:white;"
-                                    href="<%=request.getContextPath()%>/logout">Logout</a>
+                                <% if ("ADMIN".equals(role)) { %>
+                                    <a class="link" style="color:white; font-weight:bold;"
+                                        href="<%=request.getContextPath()%>/admin/dashboard.jsp">⬅ Admin Dashboard</a> •
+                                    <% } %>
+                                        <a class="link" style="color:#ffeb3b; font-weight:bold;"
+                                            href="<%=request.getContextPath()%>/notifications">🔔 Notifications</a> •
+                                        <a class="link" style="color:white;"
+                                            href="<%=request.getContextPath()%>/logout">Logout</a>
                     </div>
                 </div>
 
@@ -156,11 +160,12 @@
                                             <a class="btn" href="<%=request.getContextPath()%>/staff/rooms">Rates</a>
                                             <a class="btn"
                                                 href="<%=request.getContextPath()%>/staff/support">Tickets</a>
+                                            <a class="btn" href="<%=request.getContextPath()%>/staff/help.jsp">User
+                                                Guide</a>
                                         </div>
 
                                         <p style="margin-top:12px; opacity:0.9;">
-                                            Tip: Use <b>Reservations Management</b> to filter by status/type and close
-                                            completed stays.
+                                            Tip: Check the <b>User Guide</b> for system operations and task procedures.
                                         </p>
                                     </div>
 

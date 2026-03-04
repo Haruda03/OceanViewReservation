@@ -31,7 +31,7 @@
 
                 <div class="buttons">
                     <a href="<%=request.getContextPath()%>/login.jsp" class="btn primary">Login</a>
-                    <a href="<%=request.getContextPath()%>/register.jsp" class="btn secondary">Book Your Stay</a>
+                    <a href="<%=request.getContextPath()%>/publicBooking.jsp" class="btn secondary">Book Your Stay</a>
                 </div>
             </div>
         </div>

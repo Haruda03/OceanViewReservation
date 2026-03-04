@@ -230,8 +230,11 @@
 
                             <button class="print-btn" onclick="window.print()">Print Invoice</button>
                             <div style="text-align: center; margin-top: 15px;">
-                                <a href="<%=request.getContextPath()%>/customer/my-bookings" style="color: #555;">Back
-                                    to My Bookings</a>
+                                <a class="btn-back" href="<%=request.getContextPath()%>/customer/my-bookings">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                                    </svg> Back to Bookings
+                                </a>
                             </div>
                         </div>
                     </div>

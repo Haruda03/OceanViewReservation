@@ -66,7 +66,8 @@
 
                             <div class="glass-card">
                                 <h3>My Reservations</h3>
-                                <p>Track reservation requests (PENDING/CONFIRMED/REJECTED/EXPIRED) and see expiry time.
+                                <p>Track reservation requests (PENDING/CONFIRMED/REJECTED)
+                                    and see expiry time.
                                 </p>
                                 <div class="action">
                                     <a class="btn"
